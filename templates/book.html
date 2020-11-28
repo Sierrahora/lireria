@@ -1,0 +1,71 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Books: Project 1
+{% endblock %}
+
+{% block body %}
+
+<!-- Book Container -->
+<div class="container"> 
+    <a href="{{ url }}"><i class="fa fa-arrow-left" aria-hidden="true"></i> Go back</a> <!-- Go back button -->
+    
+    <!-- Book Area -->
+    <h1 class="text-center pb=2">{{ book.title }}</h1>
+    <div class="d-flex justify-content-center">
+        <div class="p-2">
+            <h4>Author: {{ book.author }}</h4>
+            <h4>Publication Year: {{ book.year }}</h4>
+            <h4>ISBN number: {{ book.isbn }}</h4>
+        </div>
+    <!-- Goodreads Area -->
+        <div class="p-2">
+            <img src="{{url_for('static', filename='goodreads.png')}}" height="24" alt="goodreads-logo">
+            <h4>Total № of Reviews: {{ book_api_total }}</h4>
+            <h4 class="pt-2">Average book rating: {{ book_api_avg }}</h4>
+        </div>
+    </div>
+
+    <!-- Review Area -->
+    {% if session.logged_in %}
+    <form class="form-group" method="POST"> <!-- Make a review -->
+        <h4>{% include "includes/_message.html" %}</h4>
+        <h5>
+            Leave a Review:
+        </h5>
+
+        <label for="Review_Rating">Rating: </label> <!-- Give rating between 1 to 5-->
+        <select class="form-control" id="Review_Rating" name="rating">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+        </select>
+
+        <textarea class="form-control mt-2" id="Review_Content" rows="3" name="content" placeholder="Write your opinion about the book..."></textarea>
+
+        <button type="submit" class="btn btn-primary mb-2 mt-2">Submit review</button>
+    </form>
+    {% else %}
+    <h4> {% include "includes/_message.html" %} </h4>
+    {% endif %}
+    <!-- Reviews -->
+    <table> 
+        {% for review in book_reviews %} 
+        <tr> <!-- individual review -->
+            <div class="container p-3 my-3 border"> 
+                <div class="d-flex justify-content-between">
+                    <h6><strong>{{ review.username }}</strong></h6>
+                    <div class="d-flex"><p>Rating:<h6>&nbsp;{{ review.rating }}</h6></p></div>
+                </div>
+                <div><!-- Review Content -->
+                    <P>{{ review.content }}</P>
+                </div>
+            </div>
+        </tr>
+        {% endfor %}
+    </table>
+    
+</div>
+{% endblock %}
